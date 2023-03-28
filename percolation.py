@@ -1,7 +1,7 @@
 import numpy as np
 import random
 
-def percolates(n, p):
+def percolates_DFS(n, p):
     # initialize the grid with blocked sites
     grid = [[0 for i in range(n)] for j in range(n)]
 
