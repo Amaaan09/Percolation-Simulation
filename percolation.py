@@ -1,4 +1,52 @@
 import numpy as np
+import random
+
+def percolates_BFS(n, p):
+    # initialize the grid with blocked sites and an empty queue
+    grid = [[0 for i in range(n)] for j in range(n)]
+    queue = []
+
+    # populate the grid with open sites and add them to the queue
+    count = 0
+    for i in range(n):
+        for j in range(n):
+            if random.random() < p:
+                grid[i][j] = 1
+                count += 1
+                queue.append((i, j))
+
+    # initialize variables to keep track of visited sites and percolation
+    visited = [[False for i in range(n)] for j in range(n)]
+    percolates = False
+
+    # perform BFS on each open site in the top row
+    for j in range(n):
+        if grid[0][j] == 1:
+            queue.append((0, j))
+
+    while queue:
+        # pop the first site from the queue
+        i, j = queue.pop(0)
+
+        # check if the site is connected to the bottom row
+        if i == n-1:
+            percolates = True
+            break
+
+        # mark the site as visited
+        visited[i][j] = True
+
+        # check the neighboring sites
+        if i > 0 and grid[i-1][j] == 1 and not visited[i-1][j]:
+            queue.append((i-1, j))
+        if i < n-1 and grid[i+1][j] == 1 and not visited[i+1][j]:
+            queue.append((i+1, j))
+        if j > 0 and grid[i][j-1] == 1 and not visited[i][j-1]:
+            queue.append((i, j-1))
+        if j < n-1 and grid[i][j+1] == 1 and not visited[i][j+1]:
+            queue.append((i, j+1))
+
+    return grid, percolates, count
 
 class WeightedTree:
     def __init__(self, n):
@@ -20,7 +68,7 @@ class WeightedTree:
             self.parent[root_j] = root_i
             self.size[root_i] += self.size[root_j]
 
-def percolation(n, p):
+def percolates_WT(n, p):
     # Initialize the grid
     grid = np.random.rand(n, n) < p
 
