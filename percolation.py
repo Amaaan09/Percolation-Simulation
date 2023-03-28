@@ -25,9 +25,9 @@ def percolates_DFS(n, p):
     # check if any site in the bottom row is connected to the top row
     for j in range(n):
         if visited[n-1][j]:
-            return True, count
+            return grid, True, count
 
-    return False, count
+    return grid, False, count
 
 def dfs(grid, visited, count, i, j):
     # mark the site as visited
