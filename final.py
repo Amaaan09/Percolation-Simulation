@@ -1,7 +1,7 @@
 import streamlit as st
 import numpy as np
+import matplotlib.pyplot as plt
 from percolation import WeightedTree
-import plotly.graph_objs as go
 
 def percolation(n, p):
     # Initialize the grid
@@ -36,31 +36,7 @@ def percolation(n, p):
     # Check if the source and sink are connected
     percolates = tree.find(source) == tree.find(sink)
 
-    # Create a Plotly visualization of the percolation grid
-    data = [
-        go.Heatmap(
-            z=grid,
-            colorscale=[[0, '#FFFFFF'], [1, '#000000']],
-            showscale=False
-        )
-    ]
-    layout = go.Layout(
-        width=600,
-        height=600,
-        xaxis=dict(
-            ticks='',
-            showticklabels=False
-        ),
-        yaxis=dict(
-            ticks='',
-            showticklabels=False
-        ),
-        margin=dict(t=0, l=0, r=0, b=0),
-        title=dict(text=f'Percolation Grid (n={n}, p={p})')
-    )
-    fig = go.Figure(data=data, layout=layout)
-
-    return percolates, fig
+    return grid, percolates
 
 st.title('Percolation Simulation')
 
@@ -68,9 +44,17 @@ n = st.sidebar.slider('Grid Size', 10, 100, 50, step=10)
 p = st.sidebar.slider('Occupation Probability', 0.0, 1.0, 0.5, 0.05)
 
 if st.button('Run Simulation'):
-    result, fig = percolation(n, p)
-    if result:
+    grid, percolates = percolation(n, p)
+
+    fig, ax = plt.subplots()
+    ax.imshow(grid, cmap='binary')
+    ax.set_xticks([])
+    ax.set_yticks([])
+    ax.set_title('Percolation Grid')
+
+    if percolates:
         st.success('The grid percolates!')
     else:
         st.error('The grid does not percolate.')
-    st.plotly_chart(fig)
+
+    st.pyplot(fig)
