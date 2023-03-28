@@ -1,7 +1,7 @@
 import numpy as np
 import random
 
-def percolates_DFS(n, p):
+def percolates(n, p):
     # initialize the grid with blocked sites
     grid = [[0 for i in range(n)] for j in range(n)]
 
@@ -20,31 +20,29 @@ def percolates_DFS(n, p):
     # perform recursive DFS on each open site in the top row
     for j in range(n):
         if grid[0][j] == 1:
-            dfs(grid, visited, count, 0, j)
+            stack = [(0, j)]
+            while stack:
+                i, j = stack.pop()
+                if not visited[i][j]:
+                    visited[i][j] = True
+                    count += 1
+                    if i > 0 and grid[i-1][j] == 1:
+                        stack.append((i-1, j))
+                    if i < len(grid)-1 and grid[i+1][j] == 1:
+                        stack.append((i+1, j))
+                    if j > 0 and grid[i][j-1] == 1:
+                        stack.append((i, j-1))
+                    if j < len(grid)-1 and grid[i][j+1] == 1:
+                        stack.append((i, j+1))
 
     # check if any site in the bottom row is connected to the top row
+    percolates = False
     for j in range(n):
         if visited[n-1][j]:
-            return grid, True, count
+            percolates = True
+            break
 
-    return grid, False, count
-
-def dfs(grid, visited, count, i, j):
-    # mark the site as visited
-    visited[i][j] = True
-
-    # increment the count of open sites
-    count += 1
-
-    # check the neighboring sites
-    if i > 0 and grid[i-1][j] == 1 and not visited[i-1][j]:
-        dfs(grid, visited, count, i-1, j)
-    if i < len(grid)-1 and grid[i+1][j] == 1 and not visited[i+1][j]:
-        dfs(grid, visited, count, i+1, j)
-    if j > 0 and grid[i][j-1] == 1 and not visited[i][j-1]:
-        dfs(grid, visited, count, i, j-1)
-    if j < len(grid)-1 and grid[i][j+1] == 1 and not visited[i][j+1]:
-        dfs(grid, visited, count, i, j+1)
+    return grid, percolates, count
 
 class WeightedTree:
     def __init__(self, n):
@@ -66,7 +64,7 @@ class WeightedTree:
             self.parent[root_j] = root_i
             self.size[root_i] += self.size[root_j]
 
-def percolates_WT(n, p):
+def percolation_WT(n, p):
     # Initialize the grid
     grid = np.random.rand(n, n) < p
 
@@ -83,10 +81,12 @@ def percolates_WT(n, p):
             tree.union(sink, (n-1)*n+j)
 
     # Connect adjacent occupied sites in the grid
+    count = 0
     for i in range(n):
         for j in range(n):
             if grid[i][j]:
                 index = i * n + j
+                count += 1
                 if i > 0 and grid[i-1][j]:
                     tree.union(index, (i-1)*n+j)
                 if j > 0 and grid[i][j-1]:
@@ -97,4 +97,5 @@ def percolates_WT(n, p):
                     tree.union(index, i*n+j+1)
 
     # Check if the source and sink are connected
-    return tree.find(source) == tree.find(sink)
+    percolates = tree.find(source) == tree.find(sink)
+    return grid, percolates, count
