@@ -1,52 +1,44 @@
 import numpy as np
 import random
 
-def percolates_BFS(n, p):
-    # initialize the grid with blocked sites and an empty queue
+def percolates_DFS(n, p):
+    # initialize the grid with blocked sites
     grid = [[0 for i in range(n)] for j in range(n)]
-    queue = []
 
-    # populate the grid with open sites and add them to the queue
-    count = 0
+    # populate the grid with open sites
     for i in range(n):
         for j in range(n):
             if random.random() < p:
                 grid[i][j] = 1
-                count += 1
-                queue.append((i, j))
 
-    # initialize variables to keep track of visited sites and percolation
+    # initialize a variable to keep track of visited sites
     visited = [[False for i in range(n)] for j in range(n)]
-    percolates = False
 
-    # perform BFS on each open site in the top row
+    # perform recursive DFS on each open site in the top row
     for j in range(n):
         if grid[0][j] == 1:
-            queue.append((0, j))
+            dfs(grid, visited, 0, j)
 
-    while queue:
-        # pop the first site from the queue
-        i, j = queue.pop(0)
+    # check if any site in the bottom row is connected to the top row
+    for j in range(n):
+        if visited[n-1][j]:
+            return True
 
-        # check if the site is connected to the bottom row
-        if i == n-1:
-            percolates = True
-            break
+    return False
 
-        # mark the site as visited
-        visited[i][j] = True
+def dfs(grid, visited, i, j):
+    # mark the site as visited
+    visited[i][j] = True
 
-        # check the neighboring sites
-        if i > 0 and grid[i-1][j] == 1 and not visited[i-1][j]:
-            queue.append((i-1, j))
-        if i < n-1 and grid[i+1][j] == 1 and not visited[i+1][j]:
-            queue.append((i+1, j))
-        if j > 0 and grid[i][j-1] == 1 and not visited[i][j-1]:
-            queue.append((i, j-1))
-        if j < n-1 and grid[i][j+1] == 1 and not visited[i][j+1]:
-            queue.append((i, j+1))
-
-    return grid, percolates, count
+    # check the neighboring sites
+    if i > 0 and grid[i-1][j] == 1 and not visited[i-1][j]:
+        dfs(grid, visited, i-1, j)
+    if i < len(grid)-1 and grid[i+1][j] == 1 and not visited[i+1][j]:
+        dfs(grid, visited, i+1, j)
+    if j > 0 and grid[i][j-1] == 1 and not visited[i][j-1]:
+        dfs(grid, visited, i, j-1)
+    if j < len(grid)-1 and grid[i][j+1] == 1 and not visited[i][j+1]:
+        dfs(grid, visited, i, j+1)
 
 class WeightedTree:
     def __init__(self, n):
