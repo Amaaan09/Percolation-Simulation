@@ -1,7 +1,7 @@
 import numpy as np
 import random
 
-def percolates(n, p):
+def percolates_DFS(n, p):
     # initialize the grid with blocked sites
     grid = [[0 for i in range(n)] for j in range(n)]
 
@@ -64,7 +64,7 @@ class WeightedTree:
             self.parent[root_j] = root_i
             self.size[root_i] += self.size[root_j]
 
-def percolation_WT(n, p):
+def percolates_WT(n, p):
     # Initialize the grid
     grid = np.random.rand(n, n) < p
 
