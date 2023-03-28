@@ -1,6 +1,7 @@
 import streamlit as st
 import numpy as np
 from percolation import WeightedTree
+import plotly.graph_objs as go
 
 def percolation(n, p):
     # Initialize the grid
@@ -33,7 +34,33 @@ def percolation(n, p):
                     tree.union(index, i*n+j+1)
 
     # Check if the source and sink are connected
-    return tree.find(source) == tree.find(sink)
+    percolates = tree.find(source) == tree.find(sink)
+
+    # Create a Plotly visualization of the percolation grid
+    data = [
+        go.Heatmap(
+            z=grid,
+            colorscale=[[0, '#FFFFFF'], [1, '#000000']],
+            showscale=False
+        )
+    ]
+    layout = go.Layout(
+        width=600,
+        height=600,
+        xaxis=dict(
+            ticks='',
+            showticklabels=False
+        ),
+        yaxis=dict(
+            ticks='',
+            showticklabels=False
+        ),
+        margin=dict(t=0, l=0, r=0, b=0),
+        title=dict(text=f'Percolation Grid (n={n}, p={p})')
+    )
+    fig = go.Figure(data=data, layout=layout)
+
+    return percolates, fig
 
 st.title('Percolation Simulation')
 
@@ -41,8 +68,9 @@ n = st.sidebar.slider('Grid Size', 10, 100, 50, step=10)
 p = st.sidebar.slider('Occupation Probability', 0.0, 1.0, 0.5, 0.05)
 
 if st.button('Run Simulation'):
-    result = percolation(n, p)
+    result, fig = percolation(n, p)
     if result:
         st.success('The grid percolates!')
     else:
         st.error('The grid does not percolate.')
+    st.plotly_chart(fig)
