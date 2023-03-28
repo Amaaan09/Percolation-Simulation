@@ -1,7 +1,7 @@
 import numpy as np
 import random
 
-def percolates_DFS(n, p):
+def percolates(n, p):
     # initialize the grid with blocked sites
     grid = [[0 for i in range(n)] for j in range(n)]
 
@@ -14,31 +14,37 @@ def percolates_DFS(n, p):
     # initialize a variable to keep track of visited sites
     visited = [[False for i in range(n)] for j in range(n)]
 
+    # initialize a count variable for the number of open sites
+    count = 0
+
     # perform recursive DFS on each open site in the top row
     for j in range(n):
         if grid[0][j] == 1:
-            dfs(grid, visited, 0, j)
+            dfs(grid, visited, count, 0, j)
 
     # check if any site in the bottom row is connected to the top row
     for j in range(n):
         if visited[n-1][j]:
-            return True
+            return True, count
 
-    return False
+    return False, count
 
-def dfs(grid, visited, i, j):
+def dfs(grid, visited, count, i, j):
     # mark the site as visited
     visited[i][j] = True
 
+    # increment the count of open sites
+    count += 1
+
     # check the neighboring sites
     if i > 0 and grid[i-1][j] == 1 and not visited[i-1][j]:
-        dfs(grid, visited, i-1, j)
+        dfs(grid, visited, count, i-1, j)
     if i < len(grid)-1 and grid[i+1][j] == 1 and not visited[i+1][j]:
-        dfs(grid, visited, i+1, j)
+        dfs(grid, visited, count, i+1, j)
     if j > 0 and grid[i][j-1] == 1 and not visited[i][j-1]:
-        dfs(grid, visited, i, j-1)
+        dfs(grid, visited, count, i, j-1)
     if j < len(grid)-1 and grid[i][j+1] == 1 and not visited[i][j+1]:
-        dfs(grid, visited, i, j+1)
+        dfs(grid, visited, count, i, j+1)
 
 class WeightedTree:
     def __init__(self, n):
