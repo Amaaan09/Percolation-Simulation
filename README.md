@@ -14,8 +14,9 @@ visit https://percolation-simulation.streamlit.app/
 ## Outputs
 The program generates two outputs:
 
-A plot of the percolation process, where blue represents open sites and white represents blocked sites. The percolation cluster is highlighted in yellow.
-The percolation threshold, which is the probability that the cluster percolates (i.e., spans the entire grid) for a given grid size.
+-A result where it shows where if thw grid has been percolated or not and how many opened squares it took
+
+-A plot of the percolation grid, where black represents open sites and white represents blocked sites. 
 
 ## License
 This project is licensed under the MIT License - see the LICENSE file for details.
