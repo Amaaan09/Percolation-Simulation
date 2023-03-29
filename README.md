@@ -4,9 +4,9 @@ This is a simple percolation simulation program written in Python. It uses the M
 ## Requirements
 To run this program, you will need:
 
-1.Python 3.6 or higher
+-Python 3.6 or higher
 
-2.NumPy and Matplotlib libraries
+-NumPy and Matplotlib libraries
 
 ## Usage
 visit https://percolation-simulation.streamlit.app/
