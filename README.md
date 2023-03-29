@@ -14,7 +14,7 @@ visit https://percolation-simulation.streamlit.app/
 ## Outputs
 The program generates two outputs:
 
--A result where it shows where if thw grid has been percolated or not and how many opened squares it took
+-A result where it shows where if the grid has been percolated or not and how many sites it opened
 
 -A plot of the percolation grid, where black represents open sites and white represents blocked sites. 
 
