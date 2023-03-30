@@ -64,7 +64,7 @@ class WeightedTree:
             self.parent[root_j] = root_i
             self.size[root_i] += self.size[root_j]
 
-def percolates_WT(n, p):
+def percolation(n, p):
     # Initialize the grid
     grid = np.random.rand(n, n) < p
 
